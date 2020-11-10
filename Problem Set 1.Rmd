@@ -9,11 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Basic Asymptotic Theory
+# Basic Asymptotic Theory
 
 Consider a variable with mean $\mu$ and variance $\sigma^2$. An estimator for the mean is given by:
 $$\hat{\mu}_N = N^{-1} \sum_{i=1}^N Y_i$$
-Assumin i.i.d, it's expected value is given by:
+Assuming i.i.d, it's expected value is given by:
 $$
 \begin{aligned}
 \mathbb{E}\left[ \hat{\mu}_N \right] &= \mathbb{E}\left[ N^{-1} \sum_{i=1}^N y_i \right]\\
@@ -33,7 +33,7 @@ $$
 &= \frac{\sigma^2}{N}
 \end{aligned}
 $$
-## Monte Carlo
+# Monte Carlo Simulation I
 
 ```{r message=FALSE, warning=FALSE}
 ## SETUP
@@ -41,27 +41,27 @@ $$
 library(tidyverse)
 
 ## Mean simulation function
-meanfun <- function(iter, n, mean, sd){
+normmean <- function(iter, n, mean, sd){
   mean(rnorm(n = n,
              mean = mean,
              sd =  sd))
 }
 ## Mean simulation function
-mean_simulation <- function(r, n, mean, sd){
+normmean_simulation <- function(r, n, mean, sd){
   map_dbl(.x = 1:r,
-                 .f = meanfun,
-                 n = n,
-                 mean = mean,
-                 sd = sd)
+          .f = normmean,
+          n = n,
+          mean = mean,
+          sd = sd)
 }
 
 
 ```
-## Mean=1, sd=2, n=100
+## a) Mean=1, sd=2, n=100
 
 ```{r}
-sim <- mean_simulation(r = 1000,
-                         n = 100, mean = 1, sd = 2 )
+sim <- normmean_simulation(r = 1000,
+                           n = 100, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
@@ -71,11 +71,11 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical variance:", 4/100))
 
 ```
-## Mean=1, sd=2, n=5
+## c) I Mean=1, sd=2, n=5
 
 ```{r}
-sim <- mean_simulation(r = 1000,
-                         n = 5, mean = 1, sd = 2 )
+sim <- normmean_simulation(r = 1000,
+                           n = 5, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
@@ -85,11 +85,11 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical variance:", 4/5))
 
 ```
-## Mean=1, sd=2, n=1000
+## c) II Mean=1, sd=2, n=1000
 
 ```{r}
-sim <- mean_simulation(r = 1000,
-                         n = 1000, mean = 1, sd = 2 )
+sim <- normmean_simulation(r = 1000,
+                           n = 1000, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
@@ -98,4 +98,115 @@ ggplot(mapping = aes(x = sim)) +
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical variance:", 4/1000))
 
+```
+
+## d) Chi Squared
+```{r}
+
+## Random Chi squared
+random_chisq <- function(iter, df, mean, sd){
+  sum(rnorm(n = df,
+            mean = mean,
+            sd =  sd)^2)
+}
+
+## Chi^2 mean function
+chimean <- function(iter, df, n, mean, sd){
+  mean(map_dbl(1:n,
+               .f = random_chisq,
+               df = df,
+               mean = mean,
+               sd = sd))
+  
+}
+## Chi^2 simulation function
+chi_simulation <- function(r, df, n, mean, sd){
+  map_dbl(.x = 1:r,
+          .f = chimean,
+          df = df,
+          n = n,
+          mean = mean,
+          sd = sd)
+}
+```
+## e) I Mean=0, sd=1, n=5
+
+```{r}
+sim <- chi_simulation(r = 1000,
+                      n = 5,
+                      df = 1, mean = 0, sd = 1 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical mean:", 1))
+
+```
+## e) II Mean=0, sd=1, n=100
+
+```{r}
+sim <- chi_simulation(r = 1000,
+                      n = 100,
+                      df = 1, mean = 0, sd = 1 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical mean:", 1))
+
+```
+## e) III Mean=0, sd=1, n=1000
+
+```{r}
+sim <- chi_simulation(r = 1000,
+                      n = 1000,
+                      df = 1, mean = 0, sd = 1 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical mean:", 1))
+
+```
+## f) Hypothesis test setup
+```{r}
+hyptest <- function(iter, n){
+  sim <- map_dbl(.x = 1:n,
+          .f = random_chisq,
+          df = 1,
+          mean = 0,
+          sd = 1)
+
+  t.test(sim, mu=1)$p.value
+}
+```
+## f) I Hypothesis test with n=5
+```{r}
+result_5 <- map_dbl(1:1000,
+        .f = hyptest,
+        n = 5)
+
+mean(result_5 < 0.05)
+```
+## f) II Hypothesis test with n=100
+```{r}
+result_100 <- map_dbl(1:100,
+        .f = hyptest,
+        n = 100)
+
+print(mean(result_100 < 0.05), digits = 10)
+```
+## f) III Hypothesis test with n=1000
+```{r}
+result_1000 <- map_dbl(1:100,
+        .f = hyptest,
+        n = 1000)
+
+print(mean(result_1000 < 0.05), digits = 10)
 ```
