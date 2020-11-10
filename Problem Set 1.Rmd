@@ -1,0 +1,101 @@
+---
+title: "Problem Set 1"
+author: "Martin Georg Haas"
+date: "10 11 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Basic Asymptotic Theory
+
+Consider a variable with mean $\mu$ and variance $\sigma^2$. An estimator for the mean is given by:
+$$\hat{\mu}_N = N^{-1} \sum_{i=1}^N Y_i$$
+Assumin i.i.d, it's expected value is given by:
+$$
+\begin{aligned}
+\mathbb{E}\left[ \hat{\mu}_N \right] &= \mathbb{E}\left[ N^{-1} \sum_{i=1}^N y_i \right]\\
+&= N^{-1} \mathbb{E}\left[ \sum_{i=1}^N y_i \right] \\
+&= N^{-1} \sum_{i=1}^N \mathbb{E}\left[ y_i \right] \\\\
+&= \mathbb{E}\left[ y_i \right] \\
+&= \mu
+\end{aligned}
+$$
+and its variance by:
+$$
+\begin{aligned}
+\mathbb{V}\left[ \hat{\mu}_N \right] &= \mathbb{V}\left[ N^{-1} \sum_{i=1}^N y_i \right]  \\
+&= \frac{1}{N^2} \;\mathbb{V}\left[  \sum_{i=1}^N y_i \right]  \\
+&= \frac{1}{N^2} \;\sum_{i=1}^N \mathbb{V}\left[y_i \right]\\
+&= \frac{N \mathbb{V}\left[y \right]}{N^2}\\
+&= \frac{\sigma^2}{N}
+\end{aligned}
+$$
+## Monte Carlo
+
+```{r message=FALSE, warning=FALSE}
+## SETUP
+
+library(tidyverse)
+
+## Mean simulation function
+meanfun <- function(iter, n, mean, sd){
+  mean(rnorm(n = n,
+             mean = mean,
+             sd =  sd))
+}
+## Mean simulation function
+mean_simulation <- function(r, n, mean, sd){
+  map_dbl(.x = 1:r,
+                 .f = meanfun,
+                 n = n,
+                 mean = mean,
+                 sd = sd)
+}
+
+
+```
+## Mean=1, sd=2, n=100
+
+```{r}
+sim <- mean_simulation(r = 1000,
+                         n = 100, mean = 1, sd = 2 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical variance:", 4/100))
+
+```
+## Mean=1, sd=2, n=5
+
+```{r}
+sim <- mean_simulation(r = 1000,
+                         n = 5, mean = 1, sd = 2 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical variance:", 4/5))
+
+```
+## Mean=1, sd=2, n=1000
+
+```{r}
+sim <- mean_simulation(r = 1000,
+                         n = 1000, mean = 1, sd = 2 )
+
+## Histogram
+ggplot(mapping = aes(x = sim)) +
+  geom_histogram(bins = 30) +
+  labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
+                     " VARIANCE: ", round(var(sim),digits = 4),
+                     " Theoretical variance:", 4/1000))
+
+```
