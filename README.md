@@ -29,6 +29,7 @@ normmean_simulation <- function(r, n, mean, sd){
 ## a) Mean=1, sd=2, n=100
 
 ``` r
+## Generate 1000 normal variable means
 sim <- normmean_simulation(r = 1000,
                            n = 100, mean = 1, sd = 2 )
 
@@ -40,10 +41,12 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical variance:", 4/100))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> \#\# c) I
-Mean=1, sd=2, n=5
+![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+## c) I Mean=1, sd=2, n=5
 
 ``` r
+## Generate 1000 normal variable means
 sim <- normmean_simulation(r = 1000,
                            n = 5, mean = 1, sd = 2 )
 
@@ -55,10 +58,12 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical variance:", 4/5))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- --> \#\# c) II
-Mean=1, sd=2, n=1000
+![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+## c) II Mean=1, sd=2, n=1000
 
 ``` r
+## Generate 1000 normal variable means
 sim <- normmean_simulation(r = 1000,
                            n = 1000, mean = 1, sd = 2 )
 
@@ -76,7 +81,7 @@ ggplot(mapping = aes(x = sim)) +
 
 ``` r
 
-## Random Chi squared
+## Random Chi squared function
 random_chisq <- function(iter, df, mean, sd){
   sum(rnorm(n = df,
             mean = mean,
@@ -106,6 +111,7 @@ chi_simulation <- function(r, df, n, mean, sd){
 ## e) I Mean=0, sd=1, n=5
 
 ``` r
+## Generate 1000 chi^2 variable means
 sim <- chi_simulation(r = 1000,
                       n = 5,
                       df = 1, mean = 0, sd = 1 )
@@ -118,10 +124,12 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical mean:", 1))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- --> \#\# e) II
-Mean=0, sd=1, n=100
+![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+## e) II Mean=0, sd=1, n=100
 
 ``` r
+## Generate 1000 chi^2 variable means
 sim <- chi_simulation(r = 1000,
                       n = 100,
                       df = 1, mean = 0, sd = 1 )
@@ -134,10 +142,12 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical mean:", 1))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- --> \#\# e) III
-Mean=0, sd=1, n=1000
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+## e) III Mean=0, sd=1, n=1000
 
 ``` r
+## Generate 1000 chi^2 variable means
 sim <- chi_simulation(r = 1000,
                       n = 1000,
                       df = 1, mean = 0, sd = 1 )
@@ -150,17 +160,19 @@ ggplot(mapping = aes(x = sim)) +
                      " Theoretical mean:", 1))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- --> \#\# f)
-Hypothesis test setup
+![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+## f) Hypothesis test setup
 
 ``` r
 hyptest <- function(iter, n){
+  ## Generate n chi squared variables
   sim <- map_dbl(.x = 1:n,
           .f = random_chisq,
           df = 1,
           mean = 0,
           sd = 1)
-
+  ## Do a t-test with mu = 1
   t.test(sim, mu=1)$p.value
 }
 ```
@@ -168,32 +180,38 @@ hyptest <- function(iter, n){
 ## f) I Hypothesis test with n=5
 
 ``` r
+## Do 1000 hypothesis tests
 result_5 <- map_dbl(1:1000,
         .f = hyptest,
         n = 5)
 
+## Fraction of significant tests
 mean(result_5 < 0.05)
-#> [1] 0.175
+#> [1] 0.178
 ```
 
 ## f) II Hypothesis test with n=100
 
 ``` r
+## Do 1000 hypothesis tests
 result_100 <- map_dbl(1:100,
         .f = hyptest,
         n = 100)
 
-print(mean(result_100 < 0.05), digits = 10)
-#> [1] 0.1
+## Fraction of significant tests
+mean(result_100 < 0.05)
+#> [1] 0.09
 ```
 
 ## f) III Hypothesis test with n=1000
 
 ``` r
+## Do 1000 hypothesis tests
 result_1000 <- map_dbl(1:100,
         .f = hyptest,
         n = 1000)
 
-print(mean(result_1000 < 0.05), digits = 10)
-#> [1] 0.07
+## Fraction of significant tests
+mean(result_1000 < 0.05)
+#> [1] 0.05
 ```
