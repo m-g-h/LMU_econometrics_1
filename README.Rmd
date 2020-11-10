@@ -21,13 +21,29 @@ knitr::opts_chunk$set(
 
 library(tidyverse)
 
-## Mean simulation function
+#' Mean simulation function
+#'
+#' Creates n normal variables and then calculates their mean
+#'
+#' @param iter ignore this
+#' @param n    Number of normal variables to create
+#' @param mean mean of the normal variable
+#' @param sd   standard deviation of the normal variable
+#'
 normmean <- function(iter, n, mean, sd){
   mean(rnorm(n = n,
              mean = mean,
              sd =  sd))
 }
-## Mean simulation function
+#' Repetitive mean simulation function
+#' 
+#' Create r means of a random normal variable
+#'
+#' @param r    Number of means to create
+#' @param n    umber of normal variables used in each mean
+#' @param mean see above
+#' @param sd   see above
+#'
 normmean_simulation <- function(r, n, mean, sd){
   map_dbl(.x = 1:r,
           .f = normmean,
@@ -91,14 +107,29 @@ ggplot(mapping = aes(x = sim)) +
 
 ```{r}
 
-## Random Chi squared function
+#' Create random chi squared variable
+#'
+#' @param iter ignore this
+#' @param df   degrees of freedom of the chi squared variable
+#' @param mean mean of the underlying normal variables
+#' @param sd   standard deviation of the underlying normal variables
+#'
 random_chisq <- function(iter, df, mean, sd){
   sum(rnorm(n = df,
             mean = mean,
             sd =  sd)^2)
 }
 
-## Chi^2 mean function
+#' Mean simulation function
+#'
+#' Creates n chi squared variables and then calculates their mean
+#'
+#' @param iter ignore this
+#' @param n    Number of chi squared variables to create
+#' @param df   degrees of freedom of the chi squared variable
+#' @param mean mean of the underlying normal variables
+#' @param sd   standard deviation of the underlying normal variables
+#' 
 chimean <- function(iter, df, n, mean, sd){
   mean(map_dbl(1:n,
                .f = random_chisq,
@@ -107,7 +138,17 @@ chimean <- function(iter, df, n, mean, sd){
                sd = sd))
   
 }
-## Chi^2 simulation function
+
+#' Repetitive mean simulation function
+#' 
+#' Create r means of a random chi squared variable
+#'
+#' @param r    Number of means to create
+#' @param df   see above
+#' @param n    number of normal variables used in each mean
+#' @param mean see above
+#' @param sd   see above
+#'
 chi_simulation <- function(r, df, n, mean, sd){
   map_dbl(.x = 1:r,
           .f = chimean,
@@ -172,6 +213,14 @@ ggplot(mapping = aes(x = sim)) +
 ## f) Hypothesis test setup
 
 ```{r}
+#' Hypothesis test for mean of chi squared random variables
+#'
+#' Creates n random chi squared variables of df 1 and tests the
+#' H0 whether their mean is equal to 1
+#'
+#' @param iter ignore
+#' @param n    sample size
+#'
 hyptest <- function(iter, n){
   ## Generate n chi squared variables
   sim <- map_dbl(.x = 1:n,
