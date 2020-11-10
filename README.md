@@ -45,16 +45,18 @@ normmean_simulation <- function(r, n, mean, sd){
 ## a) Mean=1, sd=2, n=100
 
 ``` r
-## Generate 1000 normal variable means
-sim <- normmean_simulation(r = 1000,
+## Generate 2000 normal variable means
+sim <- normmean_simulation(r = 2000,
                            n = 100, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(-2, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical variance:", 4/100))
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
@@ -62,16 +64,19 @@ ggplot(mapping = aes(x = sim)) +
 ## c) I Mean=1, sd=2, n=5
 
 ``` r
-## Generate 1000 normal variable means
-sim <- normmean_simulation(r = 1000,
+## Generate 2000 normal variable means
+sim <- normmean_simulation(r = 2000,
                            n = 5, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(-2, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical variance:", 4/5))
+#> Warning: Removed 1 rows containing non-finite values (stat_bin).
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
@@ -79,16 +84,18 @@ ggplot(mapping = aes(x = sim)) +
 ## c) II Mean=1, sd=2, n=1000
 
 ``` r
-## Generate 1000 normal variable means
-sim <- normmean_simulation(r = 1000,
+## Generate 2000 normal variable means
+sim <- normmean_simulation(r = 2000,
                            n = 1000, mean = 1, sd = 2 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(-2, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical variance:", 4/1000))
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
@@ -152,17 +159,20 @@ chi_simulation <- function(r, df, n, mean, sd){
 ## e) I Mean=0, sd=1, n=5
 
 ``` r
-## Generate 1000 chi^2 variable means
-sim <- chi_simulation(r = 1000,
+## Generate 2000 chi^2 variable means
+sim <- chi_simulation(r = 2000,
                       n = 5,
                       df = 1, mean = 0, sd = 1 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(0, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical mean:", 1))
+#> Warning: Removed 5 rows containing non-finite values (stat_bin).
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
@@ -170,17 +180,19 @@ ggplot(mapping = aes(x = sim)) +
 ## e) II Mean=0, sd=1, n=100
 
 ``` r
-## Generate 1000 chi^2 variable means
-sim <- chi_simulation(r = 1000,
+## Generate 2000 chi^2 variable means
+sim <- chi_simulation(r = 2000,
                       n = 100,
                       df = 1, mean = 0, sd = 1 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(0, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical mean:", 1))
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
@@ -188,17 +200,19 @@ ggplot(mapping = aes(x = sim)) +
 ## e) III Mean=0, sd=1, n=1000
 
 ``` r
-## Generate 1000 chi^2 variable means
-sim <- chi_simulation(r = 1000,
+## Generate 2000 chi^2 variable means
+sim <- chi_simulation(r = 2000,
                       n = 1000,
                       df = 1, mean = 0, sd = 1 )
 
 ## Histogram
 ggplot(mapping = aes(x = sim)) +
-  geom_histogram(bins = 30) +
+  geom_histogram(bins = 100) +
+  xlim(0, 4)+
   labs(title = paste("MEAN: ", round(mean(sim),digits = 3),
                      " VARIANCE: ", round(var(sim),digits = 4),
                      " Theoretical mean:", 1))
+#> Warning: Removed 2 rows containing missing values (geom_bar).
 ```
 
 ![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
@@ -236,7 +250,7 @@ result_5 <- map_dbl(1:1000,
 
 ## Fraction of significant tests
 mean(result_5 < 0.05)
-#> [1] 0.162
+#> [1] 0.161
 ```
 
 ## f) II Hypothesis test with n=100
@@ -249,7 +263,7 @@ result_100 <- map_dbl(1:100,
 
 ## Fraction of significant tests
 mean(result_100 < 0.05)
-#> [1] 0.05
+#> [1] 0.1
 ```
 
 ## f) III Hypothesis test with n=1000
@@ -262,5 +276,5 @@ result_1000 <- map_dbl(1:100,
 
 ## Fraction of significant tests
 mean(result_1000 < 0.05)
-#> [1] 0.06
+#> [1] 0.03
 ```
