@@ -1,7 +1,13 @@
 ---
-output: github_document
+title: "Problem Set 3"
+author: "Martin Georg Haas"
+date: "23 11 2020"
+output: 
+  html_document:
+    theme: lumen
+    highlight: breezedark
 ---
-
+::: {.fullwidth}
 # 2 Clustered and Grouped Samples
 
 In this problem, you will analyze data from Project STAR, originally analyzed in Krueger
@@ -138,10 +144,10 @@ get_pc_coefficients(index = 1,
                     data = KruegerStar)
 ```
 
-## 3. Here we do the PC bootstrap 10000 times:
+## 3. Here we do the PC bootstrap 50000 times:
 
 ```{r, message=FALSE}
-pc_coefficients <- future_map_dfr(1:10000,
+pc_coefficients <- future_map_dfr(1:50000,
                                   .f = get_pc_coefficients,
                                   data = KruegerStar,
                                   size = 1,
@@ -237,9 +243,9 @@ get_wild_coefficients(index = 1,
                       data = KruegerStar)
 ```
 
-## 3. Here we do the wild bootstrap 10000 times:
+## 3. Here we do the wild bootstrap 50000 times:
 ```{r, message=FALSE}
-wild_coefficients <- future_map_dfr(1:10000,
+wild_coefficients <- future_map_dfr(1:50000,
                                     .f = get_wild_coefficients,
                                     data = KruegerStar,
                                     size = 1,
@@ -263,3 +269,4 @@ rbind("normal" = se,
       "wild_bootstrap" = wild_boot_se
 )
 ```
+:::
