@@ -89,6 +89,9 @@ betas %>%
 
 # OLS AND HETEROSKEDASTICITY ----------------------------------------------
 
+
+# a) Data Generating Process ----------------------------------------------
+
 ## This function creates a random sample as specified in the task
 samplefun_2 <- function(N){
   tibble(const = rep(1, N),
